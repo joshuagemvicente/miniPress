@@ -1,6 +1,6 @@
 import type { Route } from "./+types/auth-layout";
 import { Outlet } from "react-router";
-import { Toaster } from "~/components/ui/sonner";
+import { Toaster } from "sonner";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -9,13 +9,15 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
+export async function loader({ request }: Route.LoaderArgs) {}
+
 export default function AuthLayout() {
   return (
     <main className="flex flex-col items-center justify-center h-screen">
       <div>
         <Outlet />
       </div>
-      <Toaster />
+      <Toaster richColors position="top-right" />
     </main>
   );
 }
