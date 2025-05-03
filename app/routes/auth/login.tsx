@@ -2,10 +2,9 @@ import { toast } from "sonner";
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
 import { Label } from "~/components/ui/label";
-import { Form } from "react-router";
-import type { Route } from "./+types/login";
+import { Form, type ActionFunctionArgs } from "react-router";
 
-export async function action({ request }: Route.ActionArgs) {}
+export async function action({ request }: ActionFunctionArgs) {}
 
 export default function Login() {
   return (

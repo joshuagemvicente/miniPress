@@ -8,21 +8,26 @@ type SessionFlashData = {
   error: string;
 };
 
-const { getSession, commitSession, destroySession } =
-  createCookieSessionStorage<SessionData, SessionFlashData>({
-    cookie: {
-      name: "__session",
+export const sessionStorage = createCookieSessionStorage<
+  SessionData,
+  SessionFlashData
+>({
+  cookie: {
+    name: "__session",
 
-      // all of these are optional
-      domain: "reactrouter.com",
-      // expires: new Date(Date.now() + 60_000),
-      httpOnly: true,
-      maxAge: 60,
-      path: "/",
-      sameSite: "lax",
-      secrets: ["abububwebwe"],
-      secure: true,
-    },
-  });
+    // all of these are optional
+    domain: "reactrouter.com",
+    // expires: new Date(Date.now() + 60_000),
+    httpOnly: true,
+    maxAge: 60,
+    path: "/",
+    sameSite: "lax",
+    secrets: ["abububwebwe"],
+    secure: true,
+  },
+});
 
-export { getSession, commitSession, destroySession };
+export async function getSession(request: Request) {
+  const cookie = request.headers.get("Cookie");
+  return sessionStorage.getSession(cookie);
+}

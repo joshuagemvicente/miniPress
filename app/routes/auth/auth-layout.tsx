@@ -1,15 +1,14 @@
-import type { Route } from "./+types/auth-layout";
-import { Outlet } from "react-router";
+import { Outlet, type LoaderFunctionArgs, type MetaArgs } from "react-router";
 import { Toaster } from "sonner";
 
-export function meta({}: Route.MetaArgs) {
+export function meta({}: MetaArgs) {
   return [
     { title: "Auth | MiniPress" },
     { name: "description", content: "Welcome to React Router!" },
   ];
 }
 
-export async function loader({ request }: Route.LoaderArgs) {}
+// export async function loader({ request }: LoaderFunctionArgs) {}
 
 export default function AuthLayout() {
   return (
