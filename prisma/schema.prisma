@@ -25,6 +25,7 @@ model User {
 
   posts  Post[]
   Upvote Upvote[]
+  comments Comments[]
 }
 
 model Post {
@@ -37,7 +38,17 @@ model Post {
   updatedAt   DateTime @updatedAt
   Author      User?    @relation(fields: [authorId], references: [id])
   authorId    String?
+
   Upvote      Upvote[]
+  Comments Comments[]
+  PostImages PostImages[]
+}
+
+model PostImages {
+  id     String @id @default(cuid())
+  postId String
+  Post Post @relation(fields: [postId], references: [id])
+  
 }
 
 model Upvote {
@@ -46,4 +57,15 @@ model Upvote {
   post   Post   @relation(fields: [postId], references: [id])
   postId String
   userId String
+  createdAt DateTime @default(now())
+}
+
+model Comments {
+  id     String @id @default(cuid())
+  user   User   @relation(fields: [userId], references: [id])
+  post   Post   @relation(fields: [postId], references: [id])
+  postId String
+  userId String
+  createdAt DateTime @default(now())
+
 }
