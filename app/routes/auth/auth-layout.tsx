@@ -8,8 +8,6 @@ export function meta({}: MetaArgs) {
   ];
 }
 
-// export async function loader({ request }: LoaderFunctionArgs) {}
-
 export default function AuthLayout() {
   return (
     <main className="flex flex-col items-center justify-center h-screen">

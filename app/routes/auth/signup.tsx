@@ -34,7 +34,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
   const { username: uName, email: uEmail, password: uPassword } = parse.data;
 
-  const loweredUsername = uName.toLowerCase();
+  const loweredUsername = uName.toLowerCase().trim();
   const loweredEmail = uEmail.toLowerCase();
 
   const existingUser = await prisma.user.findFirst({
@@ -122,7 +122,9 @@ export default function Signup() {
             <Label htmlFor="password">Password</Label>
             <Input type="password" name="password" />
           </div>
-          <Button className="w-full">Signup</Button>
+          <Button type="submit" className="w-full">
+            Signup
+          </Button>
         </div>
       </Form>
     </div>
