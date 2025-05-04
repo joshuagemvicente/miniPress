@@ -6,8 +6,6 @@ import {
 } from "react-router";
 import { Toaster } from "sonner";
 import { getSession } from "~/sessions.server";
-import { getUserById } from "~/user.server";
-import { sessionStorage } from "~/sessions.server";
 
 export function meta({}: MetaArgs) {
   return [
@@ -24,20 +22,22 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     throw redirect("/login");
   }
 
-  const user = await getUserById(userId);
+  return { userId };
 
-  if (!user) {
-    return redirect("/login", {
-      headers: {
-        "Set-Cookie": await sessionStorage.destroySession(session),
-      },
-    });
-  }
+  // const user = await getUserById(userId);
+  //
+  // if (!user) {
+  //   return redirect("/login", {
+  //     headers: {
+  //       "Set-Cookie": await sessionStorage.destroySession(session),
+  //     },
+  //   });
+  // }
 };
 
 export default function DashboardLayout() {
   return (
-    <main className="">
+    <main>
       <div>
         <Outlet />
       </div>

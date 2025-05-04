@@ -16,7 +16,7 @@ export const sessionStorage = createCookieSessionStorage<
     name: "__session",
 
     // all of these are optional
-    domain: "reactrouter.com",
+    // domain: "reactrouter.com",
     // expires: new Date(Date.now() + 60_000),
     httpOnly: true,
     maxAge: 60,

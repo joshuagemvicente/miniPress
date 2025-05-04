@@ -12,9 +12,8 @@ import {
 import { loginSchema } from "~/validations/auth/loginSchema";
 import { prisma } from "~/lib/prisma";
 import bcrypt from "bcryptjs";
-import { getSession } from "~/sessions.server";
 import { useEffect } from "react";
-import { sessionStorage } from "~/sessions.server";
+import { sessionStorage, getSession } from "~/sessions.server";
 
 export async function action({ request }: ActionFunctionArgs) {
   const formData = await request.formData();
@@ -30,6 +29,10 @@ export async function action({ request }: ActionFunctionArgs) {
 
   const { username: uName, password: uPassword } = parsed.data;
 
+  if (!username || !password) {
+    return data({ warning: "Please fill all the fields" }, { status: 400 });
+  }
+
   const user = await prisma.user.findUnique({
     where: {
       username: uName,
@@ -38,10 +41,6 @@ export async function action({ request }: ActionFunctionArgs) {
 
   if (!user) {
     return data({ error: "Invalid username or password" }, { status: 404 });
-  }
-
-  if (!uName || !uPassword) {
-    return data({ info: "Please fill all the fields" }, { status: 400 });
   }
 
   const isPasswordValid = await bcrypt.compare(uPassword, user.password);
@@ -65,12 +64,12 @@ export default function Login() {
 
   useEffect(() => {
     if (actionData) {
-      if (actionData.success) {
-        toast.success(actionData.success);
-      } else if (actionData.error) {
+      if (actionData.error) {
         toast.error(actionData.error);
-      } else if (actionData.info) {
-        toast.info(actionData.info);
+      } else if (actionData.warning) {
+        toast.warning(actionData.warning);
+      } else {
+        toast.success("Login successful");
       }
     }
   }, [actionData]);
