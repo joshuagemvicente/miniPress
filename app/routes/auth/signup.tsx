@@ -34,6 +34,15 @@ export async function action({ request }: ActionFunctionArgs) {
 
   const { username: uName, email: uEmail, password: uPassword } = parse.data;
 
+  if (!username || !email || !password) {
+    return data(
+      {
+        info: "Please fill all the fields",
+      },
+      { status: 400 }
+    );
+  }
+
   const loweredUsername = uName.toLowerCase().trim();
   const loweredEmail = uEmail.toLowerCase();
 
@@ -47,15 +56,6 @@ export async function action({ request }: ActionFunctionArgs) {
       ],
     },
   });
-
-  if (!uName || !uEmail || !uPassword) {
-    return data(
-      {
-        info: "Please fill all the fields",
-      },
-      { status: 400 }
-    );
-  }
 
   if (uName.length < 3) {
     return data(
