@@ -14,6 +14,7 @@ import { signupSchema } from "~/validations/auth/signupSchema";
 import bcrypt from "bcryptjs";
 import { prisma } from "~/lib/prisma";
 import { useEffect } from "react";
+import { SignupForm } from "~/components/forms/auth/SignupForm";
 
 export async function action({ request }: ActionFunctionArgs) {
   const formData = await request.formData();
@@ -28,8 +29,8 @@ export async function action({ request }: ActionFunctionArgs) {
   });
 
   if (!parse.success) {
-    const errorMessages = parse.error.format();
-    return { errorMessages };
+    const fieldErrors = parse.error.format();
+    return data({ fieldErrors }, { status: 400 });
   }
 
   const { username: uName, email: uEmail, password: uPassword } = parse.data;
@@ -56,19 +57,6 @@ export async function action({ request }: ActionFunctionArgs) {
       ],
     },
   });
-
-  if (uName.length < 3) {
-    return data(
-      {
-        info: "Username must be at least 3 characters long",
-      },
-      { status: 400 }
-    );
-  }
-
-  if (!uEmail.includes("@")) {
-    return data({ info: "Email must be valid" }, { status: 400 });
-  }
 
   if (existingUser) {
     return data({
@@ -106,27 +94,5 @@ export default function Signup() {
     }
   }, [actionData]);
 
-  return (
-    <div>
-      <Form method="post">
-        <div className="space-y-2">
-          <div>
-            <Label htmlFor="username">Username</Label>
-            <Input type="text" name="username" />
-          </div>
-          <div>
-            <Label htmlFor="email">Email</Label>
-            <Input type="email" name="email" />
-          </div>
-          <div>
-            <Label htmlFor="password">Password</Label>
-            <Input type="password" name="password" />
-          </div>
-          <Button type="submit" className="w-full">
-            Signup
-          </Button>
-        </div>
-      </Form>
-    </div>
-  );
+  return <SignupForm fieldErrors={actionData?.fieldErrors} />;
 }

@@ -14,20 +14,21 @@ import { prisma } from "~/lib/prisma";
 import bcrypt from "bcryptjs";
 import { useEffect } from "react";
 import { sessionStorage, getSession } from "~/sessions.server";
+import { LoginForm } from "~/components/forms/auth/LoginForm";
 
 export async function action({ request }: ActionFunctionArgs) {
   const formData = await request.formData();
   const username = String(formData.get("username"));
   const password = String(formData.get("password"));
 
-  const parsed = loginSchema.safeParse({ username, password });
+  const parse = loginSchema.safeParse({ username, password });
 
-  if (!parsed.success) {
-    const errorMessages = parsed.error.flatten();
-    return { errors: errorMessages };
+  if (!parse.success) {
+    const fieldErrors = parse.error.format();
+    return data({ fieldErrors }, { status: 400 });
   }
 
-  const { username: uName, password: uPassword } = parsed.data;
+  const { username: uName, password: uPassword } = parse.data;
 
   if (!username || !password) {
     return data({ warning: "Please fill all the fields" }, { status: 400 });
@@ -68,29 +69,9 @@ export default function Login() {
         toast.error(actionData.error);
       } else if (actionData.warning) {
         toast.warning(actionData.warning);
-      } else {
-        toast.success("Login successful");
       }
     }
   }, [actionData]);
 
-  return (
-    <div>
-      <Form method="post">
-        <div className="space-y-1">
-          <div>
-            <Label htmlFor="username">Username</Label>
-            <Input type="text" name="username" />
-          </div>
-          <div>
-            <Label htmlFor="password">Password</Label>
-            <Input type="password" name="password" />
-          </div>
-          <Button className="w-full" type="submit">
-            Login
-          </Button>
-        </div>
-      </Form>
-    </div>
-  );
+  return <LoginForm fieldErrors={actionData?.fieldErrors} />;
 }
